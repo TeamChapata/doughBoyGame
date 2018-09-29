@@ -2858,7 +2858,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 3b90732a5d62b134d80975db0e4a8dc7, type: 3}
     m_FontSize: 10
     m_FontStyle: 0
     m_BestFit: 1
@@ -2919,8 +2919,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -402.86, y: -209.9}
-  m_SizeDelta: {x: 216.377, y: 53.781}
+  m_AnchoredPosition: {x: -402.86, y: -209.83603}
+  m_SizeDelta: {x: 216.377, y: 39.491}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1319973756
 MonoBehaviour:
@@ -2942,8 +2942,8 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
+    m_Font: {fileID: 12800000, guid: 3b90732a5d62b134d80975db0e4a8dc7, type: 3}
+    m_FontSize: 22
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 0
@@ -3467,8 +3467,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -385.03, y: -412.79}
-  m_SizeDelta: {x: 194.49402, y: 49.317}
+  m_AnchoredPosition: {x: -385.03, y: -412.78998}
+  m_SizeDelta: {x: 194.494, y: 39.109}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1932776548
 MonoBehaviour:
@@ -3490,8 +3490,8 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
+    m_Font: {fileID: 12800000, guid: 3b90732a5d62b134d80975db0e4a8dc7, type: 3}
+    m_FontSize: 22
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 0

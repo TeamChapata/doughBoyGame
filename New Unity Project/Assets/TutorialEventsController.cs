@@ -126,7 +126,7 @@ public class TutorialEventsController : MonoBehaviour
 
     private void eventHandler00_000(int value)
     {
-        setButtons(true, "continuar", false, "");
+        setButtons(true, "Continuar", false, "");
         estado = 1;
     }
 
@@ -136,7 +136,7 @@ public class TutorialEventsController : MonoBehaviour
                 "Vives una vida corriente con tu pareja. A partir de ahora el destino esta en tus manos, en las decisiones " +
                 "que tomes.";
 
-        setButtons(true, "continuar", false, "");
+        setButtons(true, "Continuar", false, "");
         estado = 2;
     }
 
@@ -145,7 +145,7 @@ public class TutorialEventsController : MonoBehaviour
         campoTexto.text = "Te encuentras preparando una cena romantica para tu pareja. Recuerda que las decisiones son" +
             " mas importantes de lo que crees.";
 
-        setButtons(true, "continuar", false, "");
+        setButtons(true, "Continuar", false, "");
         estado = 3;
     }
 
@@ -154,7 +154,7 @@ public class TutorialEventsController : MonoBehaviour
         campoTexto.text = "Piensas en preparar unas copas de vino para la cena, Que deberias hacer? Para comenzar el tutorial" +
             " y mostrarte el funcionamiento del sistema de decisiones, elijamos la opcion de no preparar las copas aun..";
 
-        setButtons(true, "continuar", false, "");
+        setButtons(true, "Continuar", false, "");
         estado = 4;
     }
 
