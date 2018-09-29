@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Collision : MonoBehaviour
 {
@@ -21,9 +22,13 @@ public class Collision : MonoBehaviour
     void OnTriggerExit2D(Collider2D other)
     {
         Debug.Log("Nos vamos a la vergota");
-        /*if (t.acabado())
+        if (t.acabado())
         {
-            Initiate.Fade(pruebas, Color.white, 1.0f);
-        }*/
-}
+            Debug.Log("Nos vamos a la vergotaaaa");
+            //Initiate.Fade(pruebas, Color.white, 1.0f);
+            Destroy(GameObject.Find("suelo"));
+            GameObject.Find("caballero").GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+            GameObject.Find("fondo").transform.Translate(new Vector3(-30, 30, 0) * 30 * Time.deltaTime);
+        }
+    }
 }
