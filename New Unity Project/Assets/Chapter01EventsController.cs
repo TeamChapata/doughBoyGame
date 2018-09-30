@@ -32,7 +32,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     // VARIABLES DE ESTADO
     private static int estado = 0;                                            //Variable de control de los estados
-        
+
     // VARIABLES DE ESTADISTICAS
     private bool[] vidas = new bool[6] { true , true , true,
                                          false, false, false };                //Cantidad de vidas
@@ -95,7 +95,7 @@ public class Chapter01EventsController : MonoBehaviour
     private int getVida()
     {
         int retVal = 6;
-        for(int n = 6; n > 0 && !vidas[n]; n--)
+        for (int n = 6; n > 0 && !vidas[n]; n--)
         {
             retVal--;
         }
@@ -413,7 +413,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_800(int value)
     {
-        if(value == 0)
+        if (value == 0)
         {
             ayudarJagri = true;
             estado = 9;
@@ -691,7 +691,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_330(int value)
     {
-        if(value == 0)
+        if (value == 0)
         {
             estado = 34;
 
@@ -774,7 +774,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_040(int value)
     {
-        if(dragonMuerto)
+        if (dragonMuerto)
         {
             estado = 41;
         }
