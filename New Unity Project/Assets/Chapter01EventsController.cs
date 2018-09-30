@@ -2,10 +2,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class Chapter01EventsController : MonoBehaviour
 {
+
     // CONSTANTES DE ELEMENTOS
     private const string bocadillo = "bocadillo";                            //Nombre del campo de texto
     private const string op_a = "op_a";                                      //Nombre del boton 1
@@ -25,9 +27,9 @@ public class Chapter01EventsController : MonoBehaviour
     // VARIABLES DE CONTROL DE EVENTOS
     [SerializeField] private bool vivo = true;                                // Variable de evento
     [SerializeField] private bool maxVida = true;                             // Variable de evento
-    [SerializeField] private bool ayudarJagri = false;
-    [SerializeField] private bool llaveCogida = false;
-    [SerializeField] private bool dragonMuerto = false;
+    [SerializeField] private bool ayudarJagri = false;                        // Variable de evento
+    [SerializeField] private bool llaveCogida = false;                        // Variable de evento
+    [SerializeField] private bool dragonMuerto = false;                       // Variable de evento
 
 
     // VARIABLES DE ESTADO
@@ -46,6 +48,8 @@ public class Chapter01EventsController : MonoBehaviour
         campoTexto = GameObject.Find(bocadillo).GetComponent<Text>();
         botonUno = GameObject.Find(op_a);
         botonDos = GameObject.Find(op_b);
+        campoAtaqueBox = GameObject.Find(campo_multiplicador_ataque).GetComponent<campoTexto>();
+        campoDefensaBox = GameObject.Find(campo_multiplicador_defensa).GetComponent<campoTexto>();
 
         //inicializacion de las vidas
         for (int n = 0; n < vidas.Length; n++)
@@ -61,6 +65,60 @@ public class Chapter01EventsController : MonoBehaviour
                 vidasImagen[n].SetActive(false);  //Deshabilita las tres segundas vidas
             }
         }
+    }
+
+    //-----------------------------------------------------//
+    //
+    //------------- MODULO LOAD & SAVE --------------------//
+    //
+    //-----------------------------------------------------//
+
+    public void saveOnPrefs()
+    {
+        PlayerPrefs.SetInt("hayGuardado", 1);
+        PlayerPrefs.SetInt("vivo", vivo ? 1 : 0);
+        PlayerPrefs.SetInt("maxVida", maxVida ? 1 : 0);
+        PlayerPrefs.SetInt("ayudarJagri", ayudarJagri ? 1 : 0);
+        PlayerPrefs.SetInt("llaveCogida", llaveCogida ? 1 : 0);
+        PlayerPrefs.SetInt("dragonMuerto", dragonMuerto ? 1 : 0);
+
+        PlayerPrefs.SetInt("estado", estado);
+
+        PlayerPrefs.SetInt("vidas", getVida());
+        PlayerPrefs.SetFloat("ataque", (float) ataque);
+        PlayerPrefs.SetFloat("defensa", (float) defensa);
+        PlayerPrefs.SetString("diario", diario);
+
+    }
+
+    private bool loadFromPrefs()
+    {
+        if (PlayerPrefs.GetInt("hayGuardado") == 1)
+        {
+            vivo = PlayerPrefs.GetInt("vivo") == 1 ? true : false;
+            maxVida = PlayerPrefs.GetInt("maxVida") == 1 ? true : false;
+            ayudarJagri = PlayerPrefs.GetInt("ayudarJagri") == 1 ? true : false;
+            llaveCogida = PlayerPrefs.GetInt("llaveCogida") == 1 ? true : false;
+            dragonMuerto = PlayerPrefs.GetInt("dragonMuerto") == 1 ? true : false;
+
+            estado = PlayerPrefs.GetInt("estado");
+
+            int numVidas = PlayerPrefs.GetInt("vidas");
+            vidas[0] = numVidas >= 1 ? true : false;
+            vidas[1] = numVidas >= 2 ? true : false;
+            vidas[2] = numVidas >= 3 ? true : false;
+            vidas[3] = numVidas >= 4 ? true : false;
+            vidas[4] = numVidas >= 5 ? true : false;
+            vidas[5] = numVidas >= 6 ? true : false;
+            ataque = PlayerPrefs.GetFloat("ataque");
+            defensa = PlayerPrefs.GetFloat("defensa");
+            diario = PlayerPrefs.GetString("diario");
+
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //-----------------------------------------------------//
@@ -157,17 +215,26 @@ public class Chapter01EventsController : MonoBehaviour
 
     public void nextEvent_a()
     {
-        riseEvent(estado, 0);
+        if (!vivo)
+        {
+            estado = -1;
+        }
+        else
+        {
+            riseEvent(estado, 0);
+        }
     }
 
     public void nextEvent_b()
     {
-        riseEvent(estado, 1);
-    }
-
-    public bool acabado()
-    {
-        return estado == -1;
+        if (!vivo)
+        {
+            estado = -1;
+        }
+        else
+        {
+            riseEvent(estado, 1);
+        }
     }
 
     private void setButtons(bool b1_interactiable, string b1_text, bool b2_interactiable, string b2_text)
@@ -180,6 +247,8 @@ public class Chapter01EventsController : MonoBehaviour
 
     public void riseEvent(int eventCode, int value)
     {
+        campoAtaqueBox.text = "" + (ataque + 1.0);
+        campoDefensaBox.text = "" + (defensa + 1.0);
         switch (eventCode)
         {
             case 0:
@@ -393,7 +462,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_008(int value)
     {
-        campoTexto.text = "Parece que tienes ante ti la primera decision de la historia, que haces?, Ayudas a Jagri?\\nA)   Ayudar a Jagri, no pierdo nada por ayudarle.\\nB)   Debo seguir mi camino, no tengo tiempo que perder.";
+        campoTexto.text = "Parece que tienes ante ti la primera decision de la historia, que haces?, Ayudas a Jagri?\\nA)	Ayudar a Jagri, no pierdo nada por ayudarle.\\nB)	Debo seguir mi camino, no tengo tiempo que perder.";
         setButtons(true, "A", true, "B");
         estado = 800;
     }
@@ -441,7 +510,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_012(int value)
     {
-        campoTexto.text = "Miras al suelo y ves una llave oxidada, Deberias cogerla?\\nA)   Por que no? Lo maximo que puede pasar es que enfermes.\\nB) No, esta demasiado oxidada para servir para algo.";
+        campoTexto.text = "Miras al suelo y ves una llave oxidada, Deberias cogerla?\\nA)	Por que no? Lo maximo que puede pasar es que enfermes.\\nB)	No, esta demasiado oxidada para servir para algo.";
         setButtons(true, "A", true, "B");
         estado = 210;
     }
@@ -473,7 +542,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_014(int value)
     {
-        campoTexto.text = "Encuentras un lugar perfecto para resguardarte al abrigo, junto con un horno que emite gran cantidad de calor. Que deseas hacer?\\nA)    Reforzar tu barra de pan y aumentar su danyo.\\nB)  Coger un delantal extra para el viaje.";
+        campoTexto.text = "Encuentras un lugar perfecto para resguardarte al abrigo, junto con un horno que emite gran cantidad de calor. Que deseas hacer?\\nA)	Reforzar tu barra de pan y aumentar su danyo.\\nB)	Coger un delantal extra para el viaje.";
         setButtons(true, "continuar", false, "");
         estado = 410;
     }
@@ -505,7 +574,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_016(int value)
     {
-        campoTexto.text = "A)   Atacar a la criatura. (Probabilidad de perder un delantal limpio)\\nB)  Bordear la criatura y seguir tu aventura.";
+        campoTexto.text = "A)	Atacar a la criatura. (Probabilidad de perder un delantal limpio)\\nB)	Bordear la criatura y seguir tu aventura.";
         setButtons(true, "continuar", false, "");
         estado = 610;
     }
@@ -618,7 +687,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_028(int value)
     {
-        campoTexto.text = "Ante la puerta debes tomar una decision:\\nA)    Usas la llave para abrir la puerta de la cabanya.\\nB)  Ignoras la cabanya y continuas con tu apresurado viaje.";
+        campoTexto.text = "Ante la puerta debes tomar una decision:\\nA)	Usas la llave para abrir la puerta de la cabanya.\\nB)	Ignoras la cabanya y continuas con tu apresurado viaje.";
         setButtons(llaveCogida, "continuar", false, "");
         estado = 820;
     }
@@ -671,7 +740,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_033(int value)
     {
-        campoTexto.text = "Podrias coger la barca o buscar un camino alternativo. Se vislumbra un puente en la lejania.\\nA)    Usas la llave para desbloquear la barca y cruzar el rio.\\nB)   Caminas hacia el puente que se ve al fondo.";
+        campoTexto.text = "Podrias coger la barca o buscar un camino alternativo. Se vislumbra un puente en la lejania.\\nA)	Usas la llave para desbloquear la barca y cruzar el rio.\\nB)	Caminas hacia el puente que se ve al fondo.";
         setButtons(llaveCogida, "continuar", false, "");
         estado = 330;
     }
@@ -712,7 +781,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_036(int value)
     {
-        campoTexto.text = "Mas delante en el camino encuentras otro lugar con horno como el de la aldea, parecen comunes en este lugar.\nA) Mejorar ataque.\nB) Obtener nuevo delantal";
+        campoTexto.text = "Mas delante en el camino encuentras otro lugar con horno como el de la aldea, parecen comunes en este lugar.\nA)	Mejorar ataque.\nB)	Obtener nuevo delantal";
         setButtons(true, "continuar", false, "");
         estado = 630;
     }
@@ -786,4 +855,5 @@ public class Chapter01EventsController : MonoBehaviour
         setButtons(false, "continuar", false, "");
         estado = -1;
     }
+>>>>>>> 6effae49ac48a2e59a27fa277437f62e57aae02a
 }
