@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/fondo.unity
     guid: cf24a9b8b0ec74abb8c834ed25383f01
-  - enabled: 1
-    path: Assets/pruebas.unity
-    guid: b38906276708baa4b95a9d193764c6f4
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}

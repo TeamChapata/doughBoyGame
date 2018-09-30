@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class Collision : MonoBehaviour
 {
-    public TutorialEventsController t;
+    public Chapter01EventsController t;
     public movimiento_caballero m;
 
     void OnTriggerEnter2D(Collider2D other)

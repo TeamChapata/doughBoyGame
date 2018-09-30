@@ -34,6 +34,8 @@ public class Chapter01EventsController : MonoBehaviour
 
     // VARIABLES DE ESTADO
     private static int estado = 0;                                            //Variable de control de los estados
+    private static int ret_estado = 0;
+    private static bool diarioAbierto = false;
 
     // VARIABLES DE ESTADISTICAS
     private bool[] vidas = new bool[6] { true , true , true,
@@ -48,8 +50,8 @@ public class Chapter01EventsController : MonoBehaviour
         campoTexto = GameObject.Find(bocadillo).GetComponent<Text>();
         botonUno = GameObject.Find(op_a);
         botonDos = GameObject.Find(op_b);
-        campoAtaqueBox = GameObject.Find(campo_multiplicador_ataque).GetComponent<campoTexto>();
-        campoDefensaBox = GameObject.Find(campo_multiplicador_defensa).GetComponent<campoTexto>();
+        campoAtaqueBox = GameObject.Find(campo_multiplicador_ataque).GetComponent<Text>();
+        campoDefensaBox = GameObject.Find(campo_multiplicador_defensa).GetComponent<Text>();
 
         //inicializacion de las vidas
         for (int n = 0; n < vidas.Length; n++)
@@ -126,20 +128,36 @@ public class Chapter01EventsController : MonoBehaviour
     //------------- MODULO DIARIO -------------------------//
     //
     //-----------------------------------------------------//
-
+    private string aux = "";
     private void insertarEntradaDiario(string entrada)
     {
-        diario = "- " + entrada + "\n";
+        diario += "- " + entrada + "\n";
     }
 
-    private void mostrarDiario()
-    {
-        //to-do
+    public void pulsarDiario(){
+        if (!diarioAbierto){
+            mostrarDiario();
+        }
+        else {
+            ocultarDiario();
+        }
+        diarioAbierto = !diarioAbierto;
     }
 
-    private void ocultarDiario()
+    public void mostrarDiario()
     {
-        //to-do
+        aux = campoTexto.text;
+        campoTexto.text = cabeceraDiario + diario;
+        //GameObject.Find("bocadillo").GetComponent<Text>().enabled = false;
+        //GameObject.Find("diario_texto").GetComponent<Text>().text = diario;
+    }
+
+    public void ocultarDiario()
+    {
+        campoTexto.text = aux;
+        aux = "";
+        //GameObject.Find("diario_texto").GetComponent<Text>().enabled = false;
+        //GameObject.Find("bocadillo").GetComponent<Text>().enabled = true;
     }
 
     //-----------------------------------------------------//
@@ -151,7 +169,7 @@ public class Chapter01EventsController : MonoBehaviour
     private int getVida()
     {
         int retVal = 6;
-        for (int n = 6; n > 0 && !vidas[n]; n--)
+        for (int n = 6; n > 0 && !vidas[n-1]; n--)
         {
             retVal--;
         }
@@ -176,7 +194,7 @@ public class Chapter01EventsController : MonoBehaviour
         for (int n = 0; n < cantidad && getVida() < 6; n++)
         {
             vidas[getVida()] = true;
-            vidasImagen[getVida()].SetActive(true);
+            vidasImagen[getVida()-1].SetActive(true);
             if (getVida() == 6)
             {
                 maxVida = true;
@@ -247,8 +265,8 @@ public class Chapter01EventsController : MonoBehaviour
 
     public void riseEvent(int eventCode, int value)
     {
-        campoAtaqueBox.text = "" + (ataque + 1.0);
-        campoDefensaBox.text = "" + (defensa + 1.0);
+        campoAtaqueBox.text = "Atk: " + (ataque + 1.0);
+        campoDefensaBox.text = "Def: " + (defensa + 1.0);
         switch (eventCode)
         {
             case 0:
@@ -373,9 +391,11 @@ public class Chapter01EventsController : MonoBehaviour
                 break;
             case 41:
                 eventHandler01_041(value);
+                eventRestartWalking();
                 break;
             case 42:
                 eventHandler01_042(value);
+                eventRestartWalking();
                 break;
             case 210:
                 eventHandler01_210(value);
@@ -397,6 +417,9 @@ public class Chapter01EventsController : MonoBehaviour
                 break;
             case 820:
                 eventHandler01_820(value);
+                break;
+            case 830:
+                eventRestartWalking();
                 break;
             default:
                 Debug.Log("Evento no encontrado");
@@ -462,7 +485,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_008(int value)
     {
-        campoTexto.text = "Parece que tienes ante ti la primera decision de la historia, que haces?, Ayudas a Jagri?\\nA)	Ayudar a Jagri, no pierdo nada por ayudarle.\\nB)	Debo seguir mi camino, no tengo tiempo que perder.";
+        campoTexto.text = "Parece que tienes ante ti la primera decision de la historia, que haces?, Ayudas a Jagri?\nA)	Ayudar a Jagri, no pierdo nada por ayudarle.\nB)	Debo seguir mi camino, no tengo tiempo que perder.";
         setButtons(true, "A", true, "B");
         estado = 800;
     }
@@ -472,19 +495,21 @@ public class Chapter01EventsController : MonoBehaviour
         if (value == 0)
         {
             ayudarJagri = true;
-            estado = 9;
+            estado = 830;
+            ret_estado = 9;
 
             insertarEntradaDiario("Ayudaste a jagri.");
         }
         else
         {
             ayudarJagri = false;
-            estado = 10;
+            estado = 830;
+            ret_estado = 10;
 
             insertarEntradaDiario("Desoiste a un amigo, Jagri lo recordara.");
         }
         campoTexto.text = "";
-        setButtons(false, "", false, "");
+        setButtons(true, "Continuar", false, "");
     }
 
     private void eventHandler01_009(int value)
@@ -510,7 +535,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_012(int value)
     {
-        campoTexto.text = "Miras al suelo y ves una llave oxidada, Deberias cogerla?\\nA)	Por que no? Lo maximo que puede pasar es que enfermes.\\nB)	No, esta demasiado oxidada para servir para algo.";
+        campoTexto.text = "Miras al suelo y ves una llave oxidada, Deberias cogerla?\nA)	Por que no? Lo maximo que puede pasar es que enfermes.\nB)	No, esta demasiado oxidada para servir para algo.";
         setButtons(true, "A", true, "B");
         estado = 210;
     }
@@ -520,17 +545,19 @@ public class Chapter01EventsController : MonoBehaviour
         if (value == 0)
         {
             llaveCogida = true;
-            estado = 13;
+            ret_estado = 13;
+            estado = 830;
             insertarEntradaDiario("Recogiste la llave del camino.");
         }
         else
         {
             llaveCogida = false;
-            estado = 13;
+            ret_estado = 13;
+            estado = 830;
             insertarEntradaDiario("Decidiste no llevarte la llave mugrienta.");
         }
         campoTexto.text = "";
-        setButtons(false, "", false, "");
+        setButtons(true, "Continuar", false, "");
     }
 
     private void eventHandler01_013(int value)
@@ -542,8 +569,8 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_014(int value)
     {
-        campoTexto.text = "Encuentras un lugar perfecto para resguardarte al abrigo, junto con un horno que emite gran cantidad de calor. Que deseas hacer?\\nA)	Reforzar tu barra de pan y aumentar su danyo.\\nB)	Coger un delantal extra para el viaje.";
-        setButtons(true, "continuar", false, "");
+        campoTexto.text = "Encuentras un lugar perfecto para resguardarte al abrigo, junto con un horno que emite gran cantidad de calor. Que deseas hacer?\nA)	Reforzar tu barra de pan y aumentar su danyo.\nB)	Coger un delantal extra para el viaje.";
+        setButtons(true, "A", true, "B");
         estado = 410;
     }
 
@@ -552,17 +579,19 @@ public class Chapter01EventsController : MonoBehaviour
         if (value == 0)
         {
             ataque += 0.05;
-            estado = 15;
+            estado = 830;
+            ret_estado = 15;
             insertarEntradaDiario("Mejoraste el ataque en el horno de la aldea.");
         }
         else
         {
             vidaArriba(1);
-            estado = 15;
+            estado = 830;
+            ret_estado = 15;
             insertarEntradaDiario("Recuperaste salud antes de comenzar el camino");
         }
         campoTexto.text = "";
-        setButtons(false, "", false, "");
+        setButtons(true, "Continuar", false, "");
     }
 
     private void eventHandler01_015(int value)
@@ -574,8 +603,8 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_016(int value)
     {
-        campoTexto.text = "A)	Atacar a la criatura. (Probabilidad de perder un delantal limpio)\\nB)	Bordear la criatura y seguir tu aventura.";
-        setButtons(true, "continuar", false, "");
+        campoTexto.text = "A)	Atacar a la criatura. (Probabilidad de perder un delantal limpio)\nB)	Bordear la criatura y seguir tu aventura.";
+        setButtons(true, "A", true, "B");
         estado = 610;
     }
 
@@ -587,14 +616,16 @@ public class Chapter01EventsController : MonoBehaviour
             if (combatir())
             {
                 ataque += 0.10;
-                estado = 17;
+                estado = 830;
+                ret_estado = 17;
                 dragonMuerto = true;
                 insertarEntradaDiario("Cumpliste tu papel de heroe a costa de tu integridad.");
             }
             else
             {
                 ataque += 0.10;
-                estado = 17;
+                estado = 830;
+                ret_estado = 17;
                 dragonMuerto = true;
                 insertarEntradaDiario("Cumpliste tu papel como heroe.");
                 //DIARIO HABER GANADO
@@ -602,12 +633,13 @@ public class Chapter01EventsController : MonoBehaviour
         }
         else
         {
-            estado = 21;
+            estado = 830;
+            ret_estado = 21;
             dragonMuerto = false;
             insertarEntradaDiario("Fallaste a toda una aldea.");
         }
         campoTexto.text = "";
-        setButtons(false, "", false, "");
+        setButtons(true, "Continuar", false, "");
     }
 
     private void eventHandler01_017(int value)
@@ -687,8 +719,8 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_028(int value)
     {
-        campoTexto.text = "Ante la puerta debes tomar una decision:\\nA)	Usas la llave para abrir la puerta de la cabanya.\\nB)	Ignoras la cabanya y continuas con tu apresurado viaje.";
-        setButtons(llaveCogida, "continuar", false, "");
+        campoTexto.text = "Ante la puerta debes tomar una decision:\nA)	Usas la llave para abrir la puerta de la cabanya.\nB)	Ignoras la cabanya y continuas con tu apresurado viaje.";
+        setButtons(llaveCogida, "A", true, "B");
         estado = 820;
     }
 
@@ -696,18 +728,19 @@ public class Chapter01EventsController : MonoBehaviour
     {
         if (value == 0)
         {
-            estado = 29;
-
+            estado = 830;
+            ret_estado = 29;
             defensa += 0.10;
             insertarEntradaDiario("Entraste en la cabaña misteriosa.");
         }
         else
         {
-            estado = 30;
+            estado = 830;
+            ret_estado = 30;
             insertarEntradaDiario("No conseguiste abrir la cerradura de la cabaña.");
         }
         campoTexto.text = "";
-        setButtons(false, "", false, "");
+        setButtons(true, "Continuar", false, "");
     }
 
     private void eventHandler01_029(int value)
@@ -740,8 +773,8 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_033(int value)
     {
-        campoTexto.text = "Podrias coger la barca o buscar un camino alternativo. Se vislumbra un puente en la lejania.\\nA)	Usas la llave para desbloquear la barca y cruzar el rio.\\nB)	Caminas hacia el puente que se ve al fondo.";
-        setButtons(llaveCogida, "continuar", false, "");
+        campoTexto.text = "Podrias coger la barca o buscar un camino alternativo. Se vislumbra un puente en la lejania.\nA)	Usas la llave para desbloquear la barca y cruzar el rio.\nB)	Caminas hacia el puente que se ve al fondo.";
+        setButtons(llaveCogida, "A", true, "B");
         estado = 330;
     }
 
@@ -749,20 +782,20 @@ public class Chapter01EventsController : MonoBehaviour
     {
         if (value == 0)
         {
-            estado = 34;
-
+            estado = 830;
+            ret_estado = 34;
             insertarEntradaDiario("Robaste la barca al barquero, no tuviste que pagar dinero.");
             // DIARIO HAS USADO LA BARCA
         }
         else
         {
-            estado = 35;
-
+            estado = 830;
+            ret_estado = 35;
             insertarEntradaDiario("Tus actos te llevaron a usar la fuerza");
             // DIARIO VAS AL PUENTE
         }
         campoTexto.text = "";
-        setButtons(false, "", false, "");
+        setButtons(true, "Continuar", false, "");
     }
 
     private void eventHandler01_034(int value)
@@ -782,7 +815,7 @@ public class Chapter01EventsController : MonoBehaviour
     private void eventHandler01_036(int value)
     {
         campoTexto.text = "Mas delante en el camino encuentras otro lugar con horno como el de la aldea, parecen comunes en este lugar.\nA)	Mejorar ataque.\nB)	Obtener nuevo delantal";
-        setButtons(true, "continuar", false, "");
+        setButtons(true, "A", true, "B");
         estado = 630;
     }
 
@@ -791,20 +824,21 @@ public class Chapter01EventsController : MonoBehaviour
         if (value == 0)
         {
             ataque += 0.05;
-            estado = 37;
-
+            estado = 830;
+            ret_estado = 37;
             insertarEntradaDiario("Mejoraste el ataque.");
             //DIARIO HAS MEJORADO EL ATAQUE
         }
         else
         {
             vidaArriba(1);
-            estado = 37;
+            estado = 830;
+            ret_estado = 37;
             insertarEntradaDiario("Te equipaste para la aventura con un nuevo delantal.");
             //DIARIO HAS MEJORADO LA VIDA
         }
         campoTexto.text = "";
-        setButtons(false, "", false, "");
+        setButtons(true, "Continuar", false, "");
     }
 
     private void eventHandler01_037(int value)
@@ -855,5 +889,21 @@ public class Chapter01EventsController : MonoBehaviour
         setButtons(false, "continuar", false, "");
         estado = -1;
     }
->>>>>>> 6effae49ac48a2e59a27fa277437f62e57aae02a
+
+    public bool acabado(){
+        return estado == -1;
+    }
+
+    private void eventRestartWalking()
+    {
+        iniciarMovimiento();
+        estado = ret_estado;
+    }
+
+    public void iniciarMovimiento()
+    {
+        campoTexto.text = "";
+        setButtons(false, "", false, "");
+        movimiento_pnj_prueba_1.canwalk = true;
+    }
 }
