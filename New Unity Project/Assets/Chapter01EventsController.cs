@@ -27,14 +27,14 @@ public class Chapter01EventsController : MonoBehaviour
     // VARIABLES DE CONTROL DE EVENTOS
     [SerializeField] private bool vivo = true;                                // Variable de evento
     [SerializeField] private bool maxVida = true;                             // Variable de evento
-    [SerializeField] private bool ayudarJagri = false;
-    [SerializeField] private bool llaveCogida = false;
-    [SerializeField] private bool dragonMuerto = false;
+    [SerializeField] private bool ayudarJagri = false;                        // Variable de evento
+    [SerializeField] private bool llaveCogida = false;                        // Variable de evento
+    [SerializeField] private bool dragonMuerto = false;                       // Variable de evento
 
 
     // VARIABLES DE ESTADO
     private static int estado = 0;                                            //Variable de control de los estados
-        
+
     // VARIABLES DE ESTADISTICAS
     private bool[] vidas = new bool[6] { true , true , true,
                                          false, false, false };                //Cantidad de vidas
@@ -48,6 +48,8 @@ public class Chapter01EventsController : MonoBehaviour
         campoTexto = GameObject.Find(bocadillo).GetComponent<Text>();
         botonUno = GameObject.Find(op_a);
         botonDos = GameObject.Find(op_b);
+        campoAtaqueBox = GameObject.Find(campo_multiplicador_ataque).GetComponent<campoTexto>();
+        campoDefensaBox = GameObject.Find(campo_multiplicador_defensa).GetComponent<campoTexto>();
 
         //inicializacion de las vidas
         for (int n = 0; n < vidas.Length; n++)
@@ -149,7 +151,7 @@ public class Chapter01EventsController : MonoBehaviour
     private int getVida()
     {
         int retVal = 6;
-        for(int n = 6; n > 0 && !vidas[n]; n--)
+        for (int n = 6; n > 0 && !vidas[n]; n--)
         {
             retVal--;
         }
@@ -213,12 +215,26 @@ public class Chapter01EventsController : MonoBehaviour
 
     public void nextEvent_a()
     {
-        riseEvent(estado, 0);
+        if (!vivo)
+        {
+            estado = -1;
+        }
+        else
+        {
+            riseEvent(estado, 0);
+        }
     }
 
     public void nextEvent_b()
     {
-        riseEvent(estado, 1);
+        if (!vivo)
+        {
+            estado = -1;
+        }
+        else
+        {
+            riseEvent(estado, 1);
+        }
     }
 
     private void setButtons(bool b1_interactiable, string b1_text, bool b2_interactiable, string b2_text)
@@ -231,6 +247,8 @@ public class Chapter01EventsController : MonoBehaviour
 
     public void riseEvent(int eventCode, int value)
     {
+        campoAtaqueBox.text = "" + (ataque + 1.0);
+        campoDefensaBox.text = "" + (defensa + 1.0);
         switch (eventCode)
         {
             case 0:
@@ -451,7 +469,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_800(int value)
     {
-        if(value == 0)
+        if (value == 0)
         {
             ayudarJagri = true;
             estado = 9;
@@ -729,7 +747,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_330(int value)
     {
-        if(value == 0)
+        if (value == 0)
         {
             estado = 34;
 
@@ -812,7 +830,7 @@ public class Chapter01EventsController : MonoBehaviour
 
     private void eventHandler01_040(int value)
     {
-        if(dragonMuerto)
+        if (dragonMuerto)
         {
             estado = 41;
         }
