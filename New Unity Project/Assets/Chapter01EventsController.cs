@@ -2,10 +2,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class Chapter01EventsController : MonoBehaviour
 {
+
     // CONSTANTES DE ELEMENTOS
     private const string bocadillo = "bocadillo";                            //Nombre del campo de texto
     private const string op_a = "op_a";                                      //Nombre del boton 1
@@ -61,6 +63,60 @@ public class Chapter01EventsController : MonoBehaviour
                 vidasImagen[n].SetActive(false);  //Deshabilita las tres segundas vidas
             }
         }
+    }
+
+    //-----------------------------------------------------//
+    //
+    //------------- MODULO LOAD & SAVE --------------------//
+    //
+    //-----------------------------------------------------//
+
+    public void saveOnPrefs()
+    {
+        PlayerPrefs.SetInt("hayGuardado", 1);
+        PlayerPrefs.SetInt("vivo", vivo ? 1 : 0);
+        PlayerPrefs.SetInt("maxVida", maxVida ? 1 : 0);
+        PlayerPrefs.SetInt("ayudarJagri", ayudarJagri ? 1 : 0);
+        PlayerPrefs.SetInt("llaveCogida", llaveCogida ? 1 : 0);
+        PlayerPrefs.SetInt("dragonMuerto", dragonMuerto ? 1 : 0);
+
+        PlayerPrefs.SetInt("estado", estado);
+
+        PlayerPrefs.SetInt("vidas", getVida());
+        PlayerPrefs.SetFloat("ataque", (float) ataque);
+        PlayerPrefs.SetFloat("defensa", (float) defensa);
+        PlayerPrefs.SetString("diario", diario);
+
+    }
+
+    private bool loadFromPrefs()
+    {
+        if (PlayerPrefs.GetInt("hayGuardado") == 1)
+        {
+            vivo = PlayerPrefs.GetInt("vivo") == 1 ? true : false;
+            maxVida = PlayerPrefs.GetInt("maxVida") == 1 ? true : false;
+            ayudarJagri = PlayerPrefs.GetInt("ayudarJagri") == 1 ? true : false;
+            llaveCogida = PlayerPrefs.GetInt("llaveCogida") == 1 ? true : false;
+            dragonMuerto = PlayerPrefs.GetInt("dragonMuerto") == 1 ? true : false;
+
+            estado = PlayerPrefs.GetInt("estado");
+
+            int numVidas = PlayerPrefs.GetInt("vidas");
+            vidas[0] = numVidas >= 1 ? true : false;
+            vidas[1] = numVidas >= 2 ? true : false;
+            vidas[2] = numVidas >= 3 ? true : false;
+            vidas[3] = numVidas >= 4 ? true : false;
+            vidas[4] = numVidas >= 5 ? true : false;
+            vidas[5] = numVidas >= 6 ? true : false;
+            ataque = PlayerPrefs.GetFloat("ataque");
+            defensa = PlayerPrefs.GetFloat("defensa");
+            diario = PlayerPrefs.GetString("diario");
+
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //-----------------------------------------------------//
